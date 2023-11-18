@@ -1,0 +1,69 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}{{ ad.title }}{% endblock %}
+
+{% block body %}
+
+    <div class="ad-title" style="background-image: url({{ad.coverPicture}})">
+        <div class="container">
+            <h1>{{ ad.title }}</h1>
+            <p>{{ ad.introduction }}</p>
+            <p class="h2">
+                <strong>{{ ad.rooms }} chambres</strong> pour <strong>{{ ad.price }}&euro;</strong> par nuit
+            </p>
+            <a href="#" class="btn btn-primary">Réserver</a>
+        </div>
+    </div>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-8 mb-3">
+                {{ ad.content | raw  }}
+
+                <div id="carouselCaptions" class="carousel slide">
+                    <div class="carousel-indicators">
+                    {% for picture in ad.pictures %}
+                        <button type="button" data-bs-target="#carouselCaptions" data-bs-slide-to="{{ loop.index0 }}" class="{{ loop.first ? 'active' : '' }}" aria-current="{{ loop.first ? 'true' : 'false' }}" aria-label="Slide {{ loop.index }}"></button>
+                    {% endfor %}
+                    </div>
+                    <div class="carousel-inner">
+                        {% for picture in ad.pictures %}
+                            <div class="carousel-item {{ loop.first ? 'active' : '' }}">
+                                <img src="{{ picture.url }}" class="d-block w-100" alt="{{ picture.caption }}">
+                                <div class="carousel-caption d-none d-md-block">
+                                    <h5>{{ ad.title }}</h5>
+                                    <p>{{ picture.caption }}</p>
+                                </div>
+                            </div>
+                        {% endfor %}
+
+                    </div>
+                    <button class="carousel-control-prev" type="button" data-bs-target="#carouselCaptions" data-bs-slide="prev">
+                        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Previous</span>
+                    </button>
+                    <button class="carousel-control-next" type="button" data-bs-target="#carouselCaptions" data-bs-slide="next">
+                        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                        <span class="visually-hidden">Next</span>
+                    </button>
+                </div>
+
+            </div>
+            <div class="col">
+                <div class="row">
+                    <div class="col-4">
+                        <img src="http://placehold.it/64x64" alt="Avatar de Joseph">
+                    </div>
+                    <div class="col">
+                        <h3>Joseph Staline</h3>
+                        <span class="badge badge-primary">3 annonces</span>
+                    </div>
+                </div>
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Inventore voluptate porro quidem modi vel obcaecati nulla veritatis, dolorem cumque impedit.</p>
+                <p>Reprehenderit sit beatae quidem laboriosam excepturi libero. Provident veritatis vero unde illum? Cum mollitia magni laudantium facilis, porro assumenda fuga.</p>
+                <p>Necessitatibus molestiae eveniet sunt? Quae et voluptates tempore porro veniam quis, autem quibusdam consequatur. Adipisci quidem nam error natus ratione?</p>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
