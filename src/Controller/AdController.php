@@ -24,8 +24,8 @@ class AdController extends AbstractController
         ]);
     }
 
-    #[Route('/ad/new', name: 'app_ad_new')]
-    public function new(Request $request, EntityManagerInterface $manager): Response
+    #[Route('/ad/create', name: 'app_ad_create')]
+    public function create(Request $request, EntityManagerInterface $manager): Response
     {
         $ad = new Ad;
 
@@ -34,12 +34,17 @@ class AdController extends AbstractController
         $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
+            foreach ($ad->getPictures() as $picture) {
+                $picture->setAd($ad);
+                $manager->persist($picture);
+            }
+
             $manager->persist($ad);
             $manager->flush();
 
             $this->addFlash(
                 'success',
-                'L\'annonce a bien été enregistrée'
+                "L'annonce <strong> " . $ad->getTitle() . " </strong> a bien été enregistrée"
             );
 
             return $this->redirectToRoute('app_ad_show', [
@@ -47,15 +52,47 @@ class AdController extends AbstractController
             ]);
         }
 
-        return $this->render('ad/new.html.twig', [
+        return $this->render('ad/create.html.twig', [
             'form' => $form->createView()
         ]);
     }
 
-    #[Route('/ad/{slug}', name: 'app_ad_show')]
+    #[Route('/ad/show/{slug}', name: 'app_ad_show')]
     public function show(Ad $ad): Response
     {
         return $this->render('ad/show.html.twig', [
+            'ad' => $ad
+        ]);
+    }
+
+    #[Route('/ad/update/{slug}', name: 'app_ad_update')]
+    public function update(Ad $ad, Request $request, EntityManagerInterface $manager): Response
+    {
+        $form = $this->createForm(AdType::class, $ad);
+
+        $form->handleRequest($request);
+
+        if ($form->isSubmitted() && $form->isValid()) {
+            foreach ($ad->getPictures() as $picture) {
+                $picture->setAd($ad);
+                $manager->persist($picture);
+            }
+
+            $manager->persist($ad);
+            $manager->flush();
+
+            $this->addFlash(
+                'success',
+                "Les modifications de l'annonce ont bien été enregistrées"
+            );
+
+            return $this->redirectToRoute('app_ad_show', [
+                'slug' => $ad->getSlug()
+            ]);
+        }
+
+        return $this->render('ad/update.html.twig', [
+            'form' => $form->createView(),
             'ad' => $ad
         ]);
     }

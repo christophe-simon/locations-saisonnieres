@@ -8,9 +8,15 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use App\Repository\AdRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints as Assert;
+use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
 
 #[ORM\Entity(repositoryClass: AdRepository::class)]
 #[ORM\HasLifecycleCallbacks]
+#[UniqueEntity(
+    fields: 'title',
+    message: "Une annonce contient déjà un titre similaire"
+)]
 class Ad
 {
     #[ORM\Id]
@@ -19,6 +25,12 @@ class Ad
     private ?int $id = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\Length(
+        min: 10,
+        max: 255,
+        minMessage: "Le titre doit contenir au moins {{ limit }} caractères",
+        maxMessage: "Le titre ne peut pas dépasser {{ limit }} caractères",
+    )]
     private ?string $title = null;
 
     #[ORM\Column(length: 255)]
@@ -28,18 +40,28 @@ class Ad
     private ?float $price = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Assert\Length(
+        min: 20,
+        minMessage: "L'introduction doit contenir au moins {{ limit }} caractères",
+    )]
     private ?string $introduction = null;
 
     #[ORM\Column(type: Types::TEXT)]
+    #[Assert\Length(
+        min: 100,
+        minMessage: "La description doit contenir au moins {{ limit }} caractères",
+    )]
     private ?string $content = null;
 
     #[ORM\Column(length: 255)]
+    #[Assert\Url()]
     private ?string $coverPicture = null;
 
     #[ORM\Column]
     private ?int $rooms = null;
 
     #[ORM\OneToMany(mappedBy: 'ad', targetEntity: Picture::class, orphanRemoval: true)]
+    #[Assert\Valid()]
     private Collection $pictures;
 
     public function __construct()

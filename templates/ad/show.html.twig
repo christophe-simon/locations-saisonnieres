@@ -1,6 +1,8 @@
 {% extends 'base.html.twig' %}
 
+
 {% block title %}{{ ad.title }}{% endblock %}
+
 
 {% block body %}
 
@@ -18,7 +20,7 @@
     <div class="container">
         <div class="row">
             <div class="col-md-8 mb-3">
-                {{ ad.content | raw  }}
+                {{ ad.content | raw }}
 
                 <div id="carouselCaptions" class="carousel slide">
                     <div class="carousel-indicators">
