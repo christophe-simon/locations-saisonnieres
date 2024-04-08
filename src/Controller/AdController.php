@@ -9,8 +9,9 @@ use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
-use Symfony\Component\Form\Extension\Core\Type\SubmitType;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\ExpressionLanguage\Expression;
 
 class AdController extends AbstractController
 {
@@ -33,11 +34,13 @@ class AdController extends AbstractController
     /**
      * This method enables to create a new ad
      *
+     * @IsGranted("ROLE_USER")
      * @param Request $request
      * @param EntityManagerInterface $manager
      * @return Response
      */
     #[Route('/ad/create', name: 'app_ad_create')]
+    #[IsGranted('ROLE_USER')]
     public function create(Request $request, EntityManagerInterface $manager): Response
     {
         $ad = new Ad;
@@ -89,14 +92,23 @@ class AdController extends AbstractController
     /**
      * This method enables to update a given ad according to its slug
      *
+     * @IsGranted("ROLE_USER")
      * @param Ad $ad
      * @param Request $request
      * @param EntityManagerInterface $manager
      * @return Response
      */
     #[Route('/ad/update/{slug}', name: 'app_ad_update')]
+    #[IsGranted('ROLE_USER')]
     public function update(Ad $ad, Request $request, EntityManagerInterface $manager): Response
     {
+        $user = $this->getUser();
+        if ($user !== $ad->getManager()) {
+            return $this->render('ad/unauthorized.html.twig', [
+                'message' => 'Vous n\'êtes pas autorisé(e) à modifier cette annonce.'
+            ]);
+        }
+
         $form = $this->createForm(AdType::class, $ad);
 
         $form->handleRequest($request);
@@ -120,9 +132,38 @@ class AdController extends AbstractController
             ]);
         }
 
-        return $this->render('ad/update.twig', [
+        return $this->render('ad/update.html.twig', [
             'form' => $form->createView(),
             'ad' => $ad
         ]);
+    }
+
+    /**
+     * This method enables to delete a given ad according to its slug
+     *
+     * @param Ad $ad
+     * @param EntityManagerInterface $manager
+     * @return Response
+     */
+    #[Route('/ad/delete/{slug}', name: 'app_ad_delete')]
+    #[IsGranted('ROLE_USER')]
+    public function delete(Ad $ad, EntityManagerInterface $manager): Response
+    {
+        $user = $this->getUser();
+        if ($user !== $ad->getManager()) {
+            return $this->render('ad/unauthorized.html.twig', [
+                'message' => 'Vous n\'êtes pas autorisé(e) à supprimer cette annonce.'
+            ]);
+        }
+
+        $manager->remove($ad);
+        $manager->flush();
+
+        $this->addFlash(
+            'success',
+            "L'annonce <strong>{$ad->getTitle()}</strong> a bien été supprimée"
+        );
+
+        return $this->redirectToRoute('app_ads_index');
     }
 }

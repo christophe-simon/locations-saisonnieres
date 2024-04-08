@@ -41,14 +41,13 @@ class AppFixtures extends Fixture
                 $user,
                 'password' // plain password
             );
-            $user->setPassword($hashedPassword);
 
             $user
                 ->setFirstName($faker->firstName($gender))
                 ->setLastName($faker->lastName)
                 ->setEmail($faker->email)
                 ->setPassword($hashedPassword)
-                ->setRoles(['ROLE_USER'])
+                // ->setRoles(['ROLE_USER'])
                 ->setPicture($picture)
                 ->setIntroduction($faker->sentence)
                 ->setDescription('<p>' . join('</p><p>', $faker->paragraphs(3)) . '</p>');
@@ -89,6 +88,26 @@ class AppFixtures extends Fixture
 
             $manager->persist($ad);
         }
+
+        // Admin
+        $admin = new User();
+
+        $hashedPassword = $this->passwordHasher->hashPassword(
+            $admin,
+            'password' // plain password
+        );
+
+        $admin
+            ->setFirstName('Christophe')
+            ->setLastName('Simon')
+            ->setEmail('csimon@symfony.com')
+            ->setPassword($hashedPassword)
+            ->setRoles(['ROLE_ADMIN'])
+            ->setPicture(null)
+            ->setIntroduction($faker->sentence)
+            ->setDescription('<p>' . join('</p><p>', $faker->paragraphs(3)) . '</p>');
+
+        $manager->persist($admin);
 
         $manager->flush();
     }

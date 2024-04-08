@@ -7,12 +7,13 @@ use App\Entity\PasswordUpdate;
 use App\Form\RegistrationType;
 use App\Form\PasswordUpdateType;
 use App\Form\PersonalDataUpdateType;
+use Symfony\Component\Form\FormError;
 use Doctrine\ORM\EntityManagerInterface;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Component\Security\Http\Attribute\IsGranted;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\Form\FormError;
 use Symfony\Component\Security\Http\Authentication\AuthenticationUtils;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 
@@ -91,7 +92,16 @@ class AccountController extends AbstractController
         ]);
     }
 
+    /**
+     * This method enables to update one's personal data
+     *
+     * @IsGranted("ROLE_USER")
+     * @param Request $request
+     * @param EntityManagerInterface $manager
+     * @return Response
+     */
     #[Route('/account/update-personal-data', name: 'app_account_update_personal_data')]
+    #[IsGranted('ROLE_USER')]
     public function updatePersonalData(Request $request, EntityManagerInterface $manager): Response
     {
         $user = $this->getUser();
@@ -119,7 +129,17 @@ class AccountController extends AbstractController
         ]);
     }
 
+    /**
+     * This method enables to update one's password
+     *
+     * @IsGranted("ROLE_USER")
+     * @param Request $request
+     * @param EntityManagerInterface $manager
+     * @param UserPasswordHasherInterface $passwordHasher
+     * @return Response
+     */
     #[Route('/account/update-password', name: 'app_account_update_password')]
+    #[IsGranted('ROLE_USER')]
     public function updatePassword(Request $request, EntityManagerInterface $manager, UserPasswordHasherInterface $passwordHasher): Response
     {
         $passwordUpdate = new PasswordUpdate();
@@ -161,8 +181,15 @@ class AccountController extends AbstractController
         ]);
     }
 
+    /**
+     * This method enables to display one's data
+     *
+     * @IsGranted("ROLE_USER")
+     * @return Response
+     */
     #[Route('/account/show', name: 'app_account_show')]
-    public function show()
+    #[IsGranted('ROLE_USER')]
+    public function show(): Response
     {
         return $this->render('user/show.html.twig', [
             'user' => $this->getUser()
