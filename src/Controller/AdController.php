@@ -14,6 +14,12 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 
 class AdController extends AbstractController
 {
+    /**
+     * This method enables to display the ads
+     *
+     * @param AdRepository $repo
+     * @return Response
+     */
     #[Route('/ads', name: 'app_ads_index')]
     public function index(AdRepository $repo): Response
     {
@@ -24,6 +30,13 @@ class AdController extends AbstractController
         ]);
     }
 
+    /**
+     * This method enables to create a new ad
+     *
+     * @param Request $request
+     * @param EntityManagerInterface $manager
+     * @return Response
+     */
     #[Route('/ad/create', name: 'app_ad_create')]
     public function create(Request $request, EntityManagerInterface $manager): Response
     {
@@ -38,6 +51,8 @@ class AdController extends AbstractController
                 $picture->setAd($ad);
                 $manager->persist($picture);
             }
+
+            $ad->setManager($this->getUser());
 
             $manager->persist($ad);
             $manager->flush();
@@ -57,6 +72,12 @@ class AdController extends AbstractController
         ]);
     }
 
+    /**
+     * This method enables to display a given ad according to its slug
+     *
+     * @param Ad $ad
+     * @return Response
+     */
     #[Route('/ad/show/{slug}', name: 'app_ad_show')]
     public function show(Ad $ad): Response
     {
@@ -65,6 +86,14 @@ class AdController extends AbstractController
         ]);
     }
 
+    /**
+     * This method enables to update a given ad according to its slug
+     *
+     * @param Ad $ad
+     * @param Request $request
+     * @param EntityManagerInterface $manager
+     * @return Response
+     */
     #[Route('/ad/update/{slug}', name: 'app_ad_update')]
     public function update(Ad $ad, Request $request, EntityManagerInterface $manager): Response
     {
@@ -91,7 +120,7 @@ class AdController extends AbstractController
             ]);
         }
 
-        return $this->render('ad/update.html.twig', [
+        return $this->render('ad/update.twig', [
             'form' => $form->createView(),
             'ad' => $ad
         ]);

@@ -64,6 +64,10 @@ class Ad
     #[Assert\Valid()]
     private Collection $pictures;
 
+    #[ORM\ManyToOne(inversedBy: 'ads')]
+    #[ORM\JoinColumn(nullable: false)]
+    private ?User $manager = null;
+
     public function __construct()
     {
         $this->pictures = new ArrayCollection();
@@ -194,6 +198,18 @@ class Ad
                 $picture->setAd(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getManager(): ?User
+    {
+        return $this->manager;
+    }
+
+    public function setManager(?User $manager): static
+    {
+        $this->manager = $manager;
 
         return $this;
     }

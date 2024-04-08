@@ -42,28 +42,31 @@
                     </div>
                     <button class="carousel-control-prev" type="button" data-bs-target="#carouselCaptions" data-bs-slide="prev">
                         <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Previous</span>
+                        <span class="visually-hidden">Précédent</span>
                     </button>
                     <button class="carousel-control-next" type="button" data-bs-target="#carouselCaptions" data-bs-slide="next">
                         <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                        <span class="visually-hidden">Next</span>
+                        <span class="visually-hidden">Suivant</span>
                     </button>
                 </div>
 
             </div>
             <div class="col">
-                <div class="row">
-                    <div class="col-4">
-                        <img src="http://placehold.it/64x64" alt="Avatar de Joseph">
+            {% set am = ad.manager %}
+                <div class="row mb-3 align-items-center">
+                    <div class="col-3">
+                        <a href="{{ path('app_user_show', {'slug': am.slug}) }}">
+                            <img src="{{ am.picture }}" class="avatar avatar-medium" alt="Avatar de {{ am.fullName }}">
+                        </a>
                     </div>
                     <div class="col">
-                        <h3>Joseph Staline</h3>
-                        <span class="badge badge-primary">3 annonces</span>
+                        <a href="{{ path('app_user_show', {'slug': am.slug}) }}">
+                            <h3>{{ am.fullName }}</h3>
+                        </a>
+                        <span class="badge bg-primary">{{ am.ads | length }} annonces</span>
                     </div>
                 </div>
-                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Inventore voluptate porro quidem modi vel obcaecati nulla veritatis, dolorem cumque impedit.</p>
-                <p>Reprehenderit sit beatae quidem laboriosam excepturi libero. Provident veritatis vero unde illum? Cum mollitia magni laudantium facilis, porro assumenda fuga.</p>
-                <p>Necessitatibus molestiae eveniet sunt? Quae et voluptates tempore porro veniam quis, autem quibusdam consequatur. Adipisci quidem nam error natus ratione?</p>
+                {{ am.description | raw }}
             </div>
         </div>
     </div>
