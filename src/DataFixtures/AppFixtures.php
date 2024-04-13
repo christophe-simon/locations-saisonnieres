@@ -4,8 +4,10 @@ namespace App\DataFixtures;
 
 use App\Entity\Ad;
 use Faker\Factory;
-use App\Entity\Picture;
 use App\Entity\User;
+use App\Entity\Booking;
+use App\Entity\Picture;
+use DateTimeImmutable;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
@@ -47,7 +49,6 @@ class AppFixtures extends Fixture
                 ->setLastName($faker->lastName)
                 ->setEmail($faker->email)
                 ->setPassword($hashedPassword)
-                // ->setRoles(['ROLE_USER'])
                 ->setPicture($picture)
                 ->setIntroduction($faker->sentence)
                 ->setDescription('<p>' . join('</p><p>', $faker->paragraphs(3)) . '</p>');
@@ -76,7 +77,7 @@ class AppFixtures extends Fixture
                 ->setManager($user);
 
             for ($j = 1; $j <= mt_rand(2, 5); $j++) {
-                $picture = new Picture;
+                $picture = new Picture();
 
                 $picture
                     ->setUrl($faker->imageUrl())
@@ -84,6 +85,30 @@ class AppFixtures extends Fixture
                     ->setAd($ad);
 
                 $manager->persist($picture);
+            }
+
+            // Bookings
+            for ($j = 1; $j <= mt_rand(0, 10); $j++) {
+                $booking = new Booking();
+
+                $createdAt = new DateTimeImmutable($faker->dateTimeBetween('-6 months')->format('Y-m-d H:i:s'));
+                $startsOn = new DateTimeImmutable($faker->dateTimeBetween('-3 months')->format('Y-m-d H:i:s'));
+                $duration = mt_rand(3, 10);
+                $endsOn = (clone $startsOn)->modify("+$duration days");
+                $amount = $ad->getPrice() * $duration;
+                $booker = $users[mt_rand(0, count($users) - 1)];
+                $comment = mt_rand(0, 1) ? $faker->paragraph() : null;
+
+                $booking
+                    ->setBooker($booker)
+                    ->setAd($ad)
+                    ->setStartsOn($startsOn)
+                    ->setEndsOn($endsOn)
+                    ->setCreatedAt($createdAt)
+                    ->setAmount($amount)
+                    ->setComment($comment);
+
+                $manager->persist($booking);
             }
 
             $manager->persist($ad);

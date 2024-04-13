@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\DBAL\Types\Types;
 use App\Repository\AdRepository;
+use DateTimeImmutable;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints as Assert;
 use Symfony\Bridge\Doctrine\Validator\Constraints\UniqueEntity;
@@ -68,9 +69,13 @@ class Ad
     #[ORM\JoinColumn(nullable: false)]
     private ?User $manager = null;
 
+    #[ORM\OneToMany(targetEntity: Booking::class, mappedBy: 'ad')]
+    private Collection $bookings;
+
     public function __construct()
     {
         $this->pictures = new ArrayCollection();
+        $this->bookings = new ArrayCollection();
     }
 
     #[ORM\PrePersist]
@@ -81,6 +86,32 @@ class Ad
             $slugify = new Slugify();
             $this->slug = $slugify->slugify($this->title);
         }
+    }
+
+    /**
+     * Enables to get an array of the days that are not available any more for this ad
+     *
+     * @return array An array of DateTimeImmutable objects representing booked days
+     */
+    public function getUnavailableDays()
+    {
+        $unavailableDays = [];
+
+        foreach ($this->bookings as $booking) {
+            $daysInTimestamp = range(
+                $booking->getStartsOn()->getTimestamp(),
+                $booking->getEndsOn()->getTimestamp(),
+                24 * 60 * 60
+            );
+
+            $days = array_map(function ($dayTimestamp) {
+                return new DateTimeImmutable(date('Y-m-d', $dayTimestamp));
+            }, $daysInTimestamp);
+
+            $unavailableDays = array_merge($unavailableDays, $days);
+        }
+
+        return $unavailableDays;
     }
 
     public function getId(): ?int
@@ -210,6 +241,36 @@ class Ad
     public function setManager(?User $manager): static
     {
         $this->manager = $manager;
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Booking>
+     */
+    public function getBookings(): Collection
+    {
+        return $this->bookings;
+    }
+
+    public function addBooking(Booking $booking): static
+    {
+        if (!$this->bookings->contains($booking)) {
+            $this->bookings->add($booking);
+            $booking->setAd($this);
+        }
+
+        return $this;
+    }
+
+    public function removeBooking(Booking $booking): static
+    {
+        if ($this->bookings->removeElement($booking)) {
+            // set the owning side to null (unless already changed)
+            if ($booking->getAd() === $this) {
+                $booking->setAd(null);
+            }
+        }
 
         return $this;
     }

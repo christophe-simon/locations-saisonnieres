@@ -104,9 +104,7 @@ class AdController extends AbstractController
     {
         $user = $this->getUser();
         if ($user !== $ad->getManager()) {
-            return $this->render('ad/unauthorized.html.twig', [
-                'message' => 'Vous n\'êtes pas autorisé(e) à modifier cette annonce.'
-            ]);
+            throw $this->createAccessDeniedException("Vous n'êtes pas autorisé à modifier cette annonce.");
         }
 
         $form = $this->createForm(AdType::class, $ad);
@@ -151,9 +149,7 @@ class AdController extends AbstractController
     {
         $user = $this->getUser();
         if ($user !== $ad->getManager()) {
-            return $this->render('ad/unauthorized.html.twig', [
-                'message' => 'Vous n\'êtes pas autorisé(e) à supprimer cette annonce.'
-            ]);
+            throw $this->createAccessDeniedException("Vous n'êtes pas autorisé à supprimer cette annonce.");
         }
 
         $manager->remove($ad);

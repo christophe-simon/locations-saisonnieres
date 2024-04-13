@@ -1,0 +1,14 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Page interdite{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1>Page interdite</h1>
+        <p>Vous n'avez pas le droit d'accéder à cette page.<br>
+        Vous pouvez retourner à l'accueil ou consulter nos dernières annonces.</p>
+
+        <a href="{{ path('app_homepage') }}" class="btn btn-primary">Retour à l'accueil</a>
+        <a href="{{ path('app_ads_index') }}" class="btn btn-success">Nos annonces</a>
+    </div>
+{% endblock %}

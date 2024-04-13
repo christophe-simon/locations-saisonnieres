@@ -20,7 +20,7 @@ use Symfony\Component\PasswordHasher\Hasher\UserPasswordHasherInterface;
 class AccountController extends AbstractController
 {
     /**
-     * This method enables to log in
+     * Enables to log in
      *
      * @param AuthenticationUtils $utils
      * @return Response
@@ -39,7 +39,7 @@ class AccountController extends AbstractController
     }
 
     /**
-     * This method enables to log out
+     * Enables to log out
      *
      * @return void
      */
@@ -50,7 +50,7 @@ class AccountController extends AbstractController
     }
 
     /**
-     * this method enables to register
+     * Enables to register
      *
      * @param Request $request
      * @param EntityManagerInterface $manager
@@ -93,7 +93,7 @@ class AccountController extends AbstractController
     }
 
     /**
-     * This method enables to update one's personal data
+     * Enables to update one's personal data
      *
      * @IsGranted("ROLE_USER")
      * @param Request $request
@@ -130,7 +130,7 @@ class AccountController extends AbstractController
     }
 
     /**
-     * This method enables to update one's password
+     * Enables to update one's password
      *
      * @IsGranted("ROLE_USER")
      * @param Request $request
@@ -182,7 +182,7 @@ class AccountController extends AbstractController
     }
 
     /**
-     * This method enables to display one's data
+     * Enables to display one's data
      *
      * @IsGranted("ROLE_USER")
      * @return Response
@@ -194,5 +194,18 @@ class AccountController extends AbstractController
         return $this->render('user/show.html.twig', [
             'user' => $this->getUser()
         ]);
+    }
+
+    /**
+     * Enables to display one's bookings
+     *
+     * @IsGranted("ROLE_USER")
+     * @return Response
+     */
+    #[Route('/account/bookings', name: 'app_account_bookings')]
+    #[IsGranted('ROLE_USER')]
+    public function showBookings(): Response
+    {
+        return $this->render('account/bookings.html.twig');
     }
 }
