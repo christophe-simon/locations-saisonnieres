@@ -6,6 +6,7 @@ use App\Entity\Ad;
 use Faker\Factory;
 use App\Entity\User;
 use App\Entity\Booking;
+use App\Entity\Comment;
 use App\Entity\Picture;
 use DateTimeImmutable;
 use Doctrine\Persistence\ObjectManager;
@@ -109,6 +110,19 @@ class AppFixtures extends Fixture
                     ->setComment($comment);
 
                 $manager->persist($booking);
+
+                // Comments
+                $isCommented = mt_rand(0, 2) === 2 ? true : false;
+                if ($isCommented) {
+                    $comment = new Comment();
+                    $comment
+                        ->setContent($faker->paragraph())
+                        ->setRating(mt_rand(1, 5))
+                        ->setWriter($booker)
+                        ->setAd($ad);
+
+                    $manager->persist($comment);
+                }
             }
 
             $manager->persist($ad);

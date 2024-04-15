@@ -72,10 +72,14 @@ class Ad
     #[ORM\OneToMany(targetEntity: Booking::class, mappedBy: 'ad')]
     private Collection $bookings;
 
+    #[ORM\OneToMany(targetEntity: Comment::class, mappedBy: 'ad', orphanRemoval: true)]
+    private Collection $comments;
+
     public function __construct()
     {
         $this->pictures = new ArrayCollection();
         $this->bookings = new ArrayCollection();
+        $this->comments = new ArrayCollection();
     }
 
     #[ORM\PrePersist]
@@ -112,6 +116,37 @@ class Ad
         }
 
         return $unavailableDays;
+    }
+
+    /**
+     * Enables to get the average of the reviews for an ad
+     *
+     * @return float
+     */
+    public function getAverageRating(): float
+    {
+        $sum = array_reduce($this->comments->toArray(), function ($total, $comment) {
+            return $total + $comment->getRating();
+        }, 0);
+
+        if (count($this->comments) > 0) return $average = $sum / count($this->comments);
+
+        return 0;
+    }
+
+    /**
+     * Enables to get the comment from a user relating to an ad
+     *
+     * @param User $writer
+     * @return Comment|null
+     */
+    public function getCommentFromWriter(User $writer): ?Comment
+    {
+        foreach ($this->comments as $comment) {
+            if ($comment->getWriter() === $writer) return $comment;
+        }
+
+        return null;
     }
 
     public function getId(): ?int
@@ -269,6 +304,36 @@ class Ad
             // set the owning side to null (unless already changed)
             if ($booking->getAd() === $this) {
                 $booking->setAd(null);
+            }
+        }
+
+        return $this;
+    }
+
+    /**
+     * @return Collection<int, Comment>
+     */
+    public function getComments(): Collection
+    {
+        return $this->comments;
+    }
+
+    public function addComment(Comment $comment): static
+    {
+        if (!$this->comments->contains($comment)) {
+            $this->comments->add($comment);
+            $comment->setAd($this);
+        }
+
+        return $this;
+    }
+
+    public function removeComment(Comment $comment): static
+    {
+        if ($this->comments->removeElement($comment)) {
+            // set the owning side to null (unless already changed)
+            if ($comment->getAd() === $this) {
+                $comment->setAd(null);
             }
         }
 
