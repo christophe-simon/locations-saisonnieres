@@ -1,0 +1,59 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Modification du commentaire n° {{ comment.id }}{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <h1 class="my-5">Modification du commentaire n° {{ comment.id }}</h1>
+
+        <div class="alert alert-info">
+            <strong>Annonce liée:</strong> {{ comment.ad.title }}<br>
+            <strong>Auteur:</strong> {{ comment.writer.fullName }}<br>
+            <strong>Date de création:</strong> {{ comment.createdAt | date('d/m/Y H:i') }}<br>
+            <strong>Note donnée</strong> {{ comment.rating }}
+        </div>
+
+        {{ form_start(form) }}
+
+        {{ form_widget(form) }}
+
+        <button type="submit" class="btn btn-primary">
+            <i class="fa-solid fa-check"></i>
+            Enregistrer les modifications
+        </button>
+
+        {{ form_end(form) }}
+
+        {# <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Date</th>
+                    <th>Auteur</th>
+                    <th>Commentaire</th>
+                    <th>Note</th>
+                    <th>Annonce</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for comment in comments %}
+                <tr>
+                    <td>{{ comment.id }}</td>
+                    <td>{{ comment.createdAt | date('d/m/Y H:i')}}</td>
+                    <td><img src="{{ comment.writer.picture }}" alt="{{ comment.writer.fullName }}" class="avatar avatar-mini">{{ comment.writer.fullName }}</td>
+                    <td>{{ comment.content }}</td>
+                    <td>
+                        <span class="badge badge-dark">{{ comment.rating }}</span>
+                    </td>
+                    <td>{{ comment.ad.title }}</td>
+                    <td>
+                        <a href="#" class="btn btn-primary"><i class="fa-solid fa-pencil"></i></a>
+                        <a href="#" class="btn btn-danger"><i class="fa-solid fa-trash-can"></i></a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table> #}
+    </div>
+{% endblock %}

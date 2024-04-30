@@ -34,6 +34,7 @@ class Booking
     )]
     #[Assert\GreaterThan(
         value: 'today',
+        groups: ['front'],
         message: "La date de début de réservation doit être postérieure à celle d'aujourd'hui"
 
     )]
@@ -63,6 +64,7 @@ class Booking
     private ?string $comment = null;
 
     #[ORM\PrePersist]
+    #[ORM\PreUpdate]
     public function prePersist(): void
     {
         if (empty($this->createdAt)) {
