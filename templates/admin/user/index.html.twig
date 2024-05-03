@@ -1,0 +1,45 @@
+{% extends 'admin/base.html.twig' %}
+
+{% block title %}Administration des utilisateurs{% endblock %}
+
+{% block body %}
+    <div class="container-fluid">
+        <h1 class="my-5">Gestion des utilisateurs</h1>
+
+        <table class="table table-hover">
+            <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Nom</th>
+                    <th>Email</th>
+                    <th>Introduction</th>
+                    <th>Description</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for user in pagination.data %}
+                <tr>
+                    <td>{{ user.id }}</td>
+                    <td>
+                        <img src="{{ user.picture }}" alt="{{ user.fullName }}" class="avatar avatar-mini">
+                        {{ user.fullName }}
+                    </td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.introduction }}</td>
+                    <td>{{ user.description | raw }}</td>
+                    <td>
+                        <a href="#" class="btn btn-primary"><i class="fa-solid fa-pencil"></i></a>
+                        <a href="#" class="btn btn-danger"><i class="fa-solid fa-trash-can"></i></a>
+                        {# <a href="{{ path('app_admin_comment_update', {'id': comment.id}) }}" class="btn btn-primary"><i class="fa-solid fa-pencil"></i></a>
+                        <a href="{{ path('app_admin_comment_delete', {'id': comment.id}) }}" class="btn btn-danger"><i class="fa-solid fa-trash-can"></i></a> #}
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        {{ pagination.display() }}
+
+    </div>
+{% endblock %}

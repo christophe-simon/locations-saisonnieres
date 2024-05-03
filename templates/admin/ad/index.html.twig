@@ -6,7 +6,7 @@
     <div class="container-fluid">
         <h1 class="my-5">Gestion des annonces</h1>
 
-        <table class="table table-hover">
+        <table class="table table-hover mb-5">
             <thead>
                 <tr>
                     <th>Id</th>
@@ -19,13 +19,13 @@
             </thead>
 
             <tbody>
-                {% for ad in ads %}
+                {% for ad in pagination.data %}
                 <tr>
                     <td>{{ ad.id }}</td>
                     <td>{{ ad.title }}</td>
                     <td>
-                        <img src="{{ ad.manager.picture }}" alt="{{ ad.manager.fullNAme }}" class="avatar avatar-mini me-2">
-                        {{ ad.manager.fullNAme }}
+                        <img src="{{ ad.manager.picture }}" alt="{{ ad.manager.fullName }}" class="avatar avatar-mini me-2">
+                        {{ ad.manager.fullName }}
                     </td>
                     <td class="text-center">
                         <span class="badge bg-primary rounded">{{ ad.bookings | length }}</span>
@@ -41,5 +41,8 @@
                 {% endfor %}
             </tbody>
         </table>
+
+        {{ pagination.display() }}
+
     </div>
 {% endblock %}
