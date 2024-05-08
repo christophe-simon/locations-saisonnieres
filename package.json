@@ -1,0 +1,32 @@
+{
+  "devDependencies": {
+    "@babel/core": "^7.17.0",
+    "@babel/preset-env": "^7.16.0",
+    "@symfony/webpack-encore": "^4.6.1",
+    "core-js": "^3.23.0",
+    "regenerator-runtime": "^0.13.9",
+    "sass": "^1.77.0",
+    "sass-loader": "^14.0.0",
+    "webpack": "^5.74.0",
+    "webpack-cli": "^4.10.0",
+    "webpack-notifier": "^1.15.0"
+  },
+  "license": "UNLICENSED",
+  "private": true,
+  "scripts": {
+    "dev-server": "encore dev-server",
+    "dev": "encore dev",
+    "watch": "encore dev --watch",
+    "build": "encore production --progress"
+  },
+  "name": "louons",
+  "description": "<!-- PROJECT SHIELDS -->\r <!--\r *** This template uses markdown \"reference style\" links for readability.\r *** Reference links are enclosed in brackets [ ] instead of parentheses ( ).\r *** See the bottom of this document for the declaration of the reference variables\r *** for contributors-url, forks-url, etc. This is an optional, concise syntax you may use.\r *** https://www.markdownguide.org/basic-syntax/#reference-style-links\r -->",
+  "version": "1.0.0",
+  "main": "webpack.config.js",
+  "directories": {
+    "doc": "docs",
+    "test": "tests"
+  },
+  "keywords": [],
+  "author": ""
+}

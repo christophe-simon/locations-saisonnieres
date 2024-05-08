@@ -1,7 +1,7 @@
 {% extends 'base.html.twig' %}
 
 
-{% block title %}Louons.net: location de biens immobiliers{% endblock %}
+{% block title %}locations saisonnières: location de biens immobiliers{% endblock %}
 
 
 {% block body %}
@@ -10,18 +10,18 @@
         <div class="bg-light p-5 rounded-3 mt-3 d-flex flex-column justify-content-between">
             <div>
                 <h1 class="display-3 fw-bold">
-                    louons.net: Annonces de location de biens immobiliers
+                    locations saisonnières: Annonces de locations courte durée
                 </h1>
                 <p class="lead">
-                    Nous mettons en relation les propriétaires souhaitant louer leurs biens immobiliers et les locataires.
+                    Nous mettons en relation les propriétaires souhaitant louer leurs biens immobiliers en courte durée et les locataires.
                 </p>
                 <hr class="my-4">
                 <p>
-                    Vous souhaitez louer un gîte, une maison, un appartement, ...? Consultez nos annonces pour trouver votre bonheur.
+                    Vous souhaitez louer un gîte, une maison, un appartement, ... en courte durée? Consultez nos annonces pour trouver votre bonheur.
                 </p>
             </div>
             <div class="text-center mt-4">
-                <a class="btn btn-primary btn-lg" href="#" role="button">Voir nos annonces</a>
+                <a class="btn btn-primary btn-lg" href="{{ path('app_ads_index') }}" role="button">Voir nos annonces</a>
             </div>
         </div>
 
